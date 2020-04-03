@@ -11,9 +11,23 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".BookActivity"></activity>
-        <activity android:name=".AllBooksActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".CurrentlyReadingActivity"
+            android:label="Currently Reading Books"/>
+        <activity
+            android:name=".AlreadyReadActivity"
+            android:label="Already Read Books" />
+        <activity
+            android:name=".WantToActivity"
+            android:label="Want To Read Books" />
+        <activity
+            android:name=".BookActivity"
+            android:label="Books" />
+        <activity
+            android:name=".AllBooksActivity"
+            android:label="All Book" />
+        <activity
+            android:name=".MainActivity"
+            android:label="Brainless Library">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
