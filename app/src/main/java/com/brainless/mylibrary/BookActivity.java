@@ -83,16 +83,11 @@ public class BookActivity extends AppCompatActivity {
     private void btnWantToReadTapped() {
         Log.d(TAG, "btnWantToReadTapped: started");
 
-        boolean doesExist = false;
 
         ArrayList<Book> wantToReadBooks = util.getWantToReadBooks();
-        for (Book book: wantToReadBooks) {
-            if (book.getId() == incomingBook.getId()) {
-                doesExist = true;
-            }
-        }
 
-        if (doesExist) {
+
+        if (wantToReadBooks.contains(incomingBook)) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
             builder.setMessage("You already added this book to your Want to Read List");
@@ -113,8 +108,57 @@ public class BookActivity extends AppCompatActivity {
             builder.setCancelable(false);
             builder.create().show();
         }else {
-            util.addWantToReadBook(incomingBook);
-            Toast.makeText(this, "The Book " + incomingBook.getName() + " added to your Want to Read Shelf", Toast.LENGTH_SHORT).show();
+
+            ArrayList<Book> alreadyReadBooks = util.getAlreadyReadBooks();
+            if (alreadyReadBooks.contains(incomingBook)) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage("You already read this book.");
+                builder.setTitle("Error");
+
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+
+                builder.setCancelable(false);
+                builder.create().show();
+            }else {
+                ArrayList<Book> currentlyReadingBooks = util.getCurrentlyReadingBooks();
+                if (currentlyReadingBooks.contains(incomingBook)) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setMessage("You are currently reading this book.");
+                    builder.setTitle("Error");
+
+                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
+
+                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
+
+                    builder.setCancelable(false);
+                    builder.create().show();
+                }else {
+                    util.addWantToReadBook(incomingBook);
+                    Toast.makeText(this, "The Book " + incomingBook.getName() + " added to your Want to Read Shelf", Toast.LENGTH_SHORT).show();
+                }
+            }
         }
 
     }
@@ -122,16 +166,11 @@ public class BookActivity extends AppCompatActivity {
     private void btnAlreadyReadTapped() {
         Log.d(TAG, "btnAlreadyReadTapped: started");
 
-        boolean doesExist = false;
 
         ArrayList<Book> alreadyReadBooks = util.getAlreadyReadBooks();
-        for (Book book: alreadyReadBooks) {
-            if (book.getId() == incomingBook.getId()) {
-                doesExist = true;
-            }
-        }
 
-        if (doesExist) {
+
+        if (alreadyReadBooks.contains(incomingBook)) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
             builder.setMessage("You already added this book to your Already Read List");
@@ -152,8 +191,37 @@ public class BookActivity extends AppCompatActivity {
             builder.setCancelable(false);
             builder.create().show();
         }else {
-            util.addAlreadyReadBook(incomingBook);
-            Toast.makeText(this, "The Book " + incomingBook.getName() + " added to your Already Read Shelf", Toast.LENGTH_SHORT).show();
+
+            ArrayList<Book> currentlyReadingBooks = util.getCurrentlyReadingBooks();
+            if (currentlyReadingBooks.contains(incomingBook)) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+                builder.setMessage("Have you finished Reading this Book?");
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        util.removeCurrentlyReadingBook(incomingBook);
+                        util.addAlreadyReadBook(incomingBook);
+                        Toast.makeText(BookActivity.this, "The Book " + incomingBook.getName() + " added to your Already Read Shelf", Toast.LENGTH_SHORT).show();
+
+                    }
+                });
+
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+
+                builder.setCancelable(false);
+                builder.create().show();
+            } else {
+
+
+                util.addAlreadyReadBook(incomingBook);
+                Toast.makeText(this, "The Book " + incomingBook.getName() + " added to your Already Read Shelf", Toast.LENGTH_SHORT).show();
+            }
         }
 
     }
@@ -161,16 +229,11 @@ public class BookActivity extends AppCompatActivity {
     private void btnCurReadingTapped() {
         Log.d(TAG, "btnCurReadingTapped: started");
 
-        boolean doesExist = false;
 
         ArrayList<Book> currentlyReadingBooks = util.getCurrentlyReadingBooks();
-        for (Book book: currentlyReadingBooks) {
-            if (book.getId() == incomingBook.getId()) {
-                doesExist = true;
-            }
-        }
 
-        if (doesExist) {
+
+        if (currentlyReadingBooks.contains(incomingBook)) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
             builder.setMessage("You already added this book to your Currently Reading List");
@@ -191,10 +254,63 @@ public class BookActivity extends AppCompatActivity {
             builder.setCancelable(false);
             builder.create().show();
         }else {
-            util.addCurrentlyReadingBook(incomingBook);
-            Toast.makeText(this, "The Book " + incomingBook.getName() + " added to your Currently Reading Shelf", Toast.LENGTH_SHORT).show();
-        }
 
+            ArrayList<Book> wantToReadBooks = util.getWantToReadBooks();
+
+            if (wantToReadBooks.contains(incomingBook)) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+                builder.setMessage("Are you going to start reading this book?");
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        util.removeWantToReadBook(incomingBook);
+                        util.addCurrentlyReadingBook(incomingBook);
+                        Toast.makeText(BookActivity.this, "The Book " + incomingBook.getName() + " added to your Currently Reading Shelf", Toast.LENGTH_SHORT).show();
+
+                    }
+                });
+
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+
+                builder.setCancelable(false);
+                builder.create().show();
+            }else {
+                ArrayList<Book> alreadyReadBooks = util.getAlreadyReadBooks();
+
+                if (alreadyReadBooks.contains(incomingBook)) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+                    builder.setMessage("Do you want to read this book Again?");
+                    builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            util.addCurrentlyReadingBook(incomingBook);
+                            Toast.makeText(BookActivity.this, "The Book " + incomingBook.getName() + " added to your Currently Reading Shelf", Toast.LENGTH_SHORT).show();
+
+                        }
+                    });
+
+                    builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
+
+                    builder.setCancelable(false);
+                    builder.create().show();
+                }else {
+                    util.addCurrentlyReadingBook(incomingBook);
+                    Toast.makeText(this, "The Book " + incomingBook.getName() + " added to your Currently Reading Shelf", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
     }
 
     private void initWidgets() {
