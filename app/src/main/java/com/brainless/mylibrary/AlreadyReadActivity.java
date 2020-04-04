@@ -20,9 +20,12 @@ public class AlreadyReadActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_already_read);
 
+        overridePendingTransition(R.anim.in, R.anim.out);
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         adapter = new BooksRecViewAdapter(this);
+        adapter.setType("already read");
         utils = new Util();
 
         recyclerView = findViewById(R.id.recView);
@@ -42,5 +45,11 @@ public class AlreadyReadActivity extends AppCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.close_in, R.anim.close_out);
     }
 }

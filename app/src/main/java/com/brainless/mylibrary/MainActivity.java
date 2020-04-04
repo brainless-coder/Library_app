@@ -24,6 +24,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        overridePendingTransition(R.anim.in, R.anim.out);
+
         initWidgets();
         setOnclickListeners();
     }
@@ -101,5 +103,11 @@ public class MainActivity extends AppCompatActivity {
         btnWantToRead = findViewById(R.id.btnWantTo);
         btnAlreadyRead = findViewById(R.id.btnAlreadyRead);
         btnAbout = findViewById(R.id.btnAbout);
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.close_in, R.anim.close_out);
     }
 }
